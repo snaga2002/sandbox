@@ -1,17 +1,14 @@
-# Use official Python image
 FROM python:3.9-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy app files
-COPY app.py /app
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-# Install Flask
-RUN pip install flask
+COPY app.py .
 
-# Expose port 8080
-EXPOSE 8080
+# Install gunicorn
+RUN pip install gunicorn
 
-# Run the app
-CMD ["python", "app.py"]
+# Use gunicorn to run the app
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
